@@ -52,7 +52,6 @@ foreach($dbh->query($sql) as $row){
 	</ul>
 	<script>
 	$(function(){
-
 		//タスク並び替え
 		$("#tasks").sortable({
 			axis:'y',
@@ -64,9 +63,19 @@ foreach($dbh->query($sql) as $row){
 				});
 			}
 		});
-
 		//タスク編集
-		$("#tasks").on('click','.editTask',function(){
+		//$(document).on('イベント','対象','処理内容')
+		$(document).on('click','.editTask',function(){
+			var id=$(this).parent().data('id');
+			var title=$(this).prev().text();
+			$('#task_'+id)
+				.empty()
+				.append($('<input type="text">').attr('value',title))
+				.append('<input type="button" value="更新" class="updataTask"')
+			$('#task_'+id+' input:eq(0)').focus();
+		});
+		/*
+		$(document).on('click','.editTask',function(){
 			var id=$(this).parent().data('id');
 			var title=$(this).prev().text();
 			$('#task_'+id)
@@ -74,8 +83,8 @@ foreach($dbh->query($sql) as $row){
 			.append($('<input type="text">').attr('value',title))
 			.append('<input type="button" value="更新" class="updateTask">');
 			$('#task_'+id+' input:eq(0)').focus();
-		});
-
+		});*/
+		/*
 		$(document).on('click','.updateTask',function(){
 			var id=$(this).parent().data('id');
 			var title=$(this).prev().val();
@@ -93,6 +102,7 @@ foreach($dbh->query($sql) as $row){
 				$('#task_'+id).empty().append(e).find('span:eq(0)').text(title);
 			});
 		});
+*/
 		//タスクの完了済チェック
 		$(document).on('click','.checkTask',function(){
 			var id=$(this).parent().data('id');

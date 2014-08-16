@@ -1,11 +1,11 @@
 <?php
-//アプリ共通設定ファイル
+//CommonConfiguration
 
-//DB設定
+//DB Connect Parameter
 define('DSN','mysql:host=localhost;dbname=todo_app');
 define('DB_USER','admindb');
 define('DB_PASSWORD','password');
 
-//エラー制御
-//基本的に全てエラーログは出すが、通知レベルのメッセージは除外する。
+//ErrorReport Control
+//AllErrorlog Output , Except Notice
 error_reporting(E_ALL&~E_NOTICE);

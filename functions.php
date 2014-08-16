@@ -1,7 +1,7 @@
 <?php
-//アプリ共通関数
+//CommonFunctionFile
 
-//DB接続設定
+//Connection DB
 function connectDb(){
 	try{
 		return new PDO(DSN,DB_USER,DB_PASSWORD);
@@ -11,7 +11,7 @@ function connectDb(){
 	}
 }
 
-//エスケープ関数
+//Escape
 function h($s){
 	return htmlspecialchars($s,ENT_QUOTES,"UTF-8");
 }

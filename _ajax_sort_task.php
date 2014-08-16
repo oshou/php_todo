@@ -1,17 +1,13 @@
 <?php
 
-//アプリ共通設定ファイル、共通関数ファイル
+//import CommonConfig & CommonFunction
 require_once('config.php');
 require_once('functions.php');
 
-//DBに接続
+//Connect DB
 $dbh=connectDb();
 
-//var_dump($_POST['task']);
-
 parse_str($_POST['task']); //$task
-
-//var_dump($task);
 
 foreach($task as $key=>$val){
 	$sql="update tasks set seq=:seq where id=:id";

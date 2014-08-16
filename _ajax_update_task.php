@@ -7,7 +7,7 @@ require_once('functions.php');
 //Connect DB
 $dbh=connectDb();
 
-//SQLFile Create(Update Title)
+//Create SQLStatement
 $sql="update tasks set title=:title,modified=now() where id=:id";
 $stmt=$dbh->prepare($sql);
 $stmt->execute(array(

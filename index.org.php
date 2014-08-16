@@ -1,29 +1,31 @@
 <?php
 
-//import CommonConfig & CommonFunction
+//共通設定ファイル、共通関数ファイルを読み込み
 require_once('config.php');
 require_once('functions.php');
 
-//Connect DB
+//DBに接続
 $dbh=connectDb();
 
-//Create TaskArray
+//タスク一覧は配列で表現する
 $tasks=array();
-
-//Create SQLStatement
+//未削除のタスクを表示するSQL文を作成
 $sql="select * from tasks where type != 'deleted' order by seq";
 
 foreach($dbh->query($sql) as $row){
 	array_push($tasks,$row);
 }
+
+//var_dump($tasks);
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 	<title>Todo_App</title>
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -39,31 +41,11 @@ foreach($dbh->query($sql) as $row){
 	</style>
 </head>
 <body>
-	<div class="container" id="header" style="background:blue">Todo_App</div>
-	<div class="container">
-		<table class="table">
-			<tr>
-				<td><input type="text" id="title"></td>
-				<td><input type="button" id="addTask" value="追加"></td>
-			</tr>
-		</table>
-		<table class="table">
-			<tr>
-				<td>id</td>
-				<td>seq</td>
-				<td>title</td>
-				<td>created</td>
-				<td>modified</td>
-			</tr>
-			<tr>
-				<td>xx</td>
-				<td>xx</td>
-				<td>xx</td>
-				<td>xx</td>
-				<td>xx</td>
-				<td>xx</td>
-			</tr>
-		</table>
+	<h1>Todo_App</h1>
+	<p>
+		<input type="text" id="title">
+		<input type="button" id="addTask" value="追加">
+	</p>
 	<ul id="tasks">
 		<?php foreach ($tasks as $task) : ?>
 		<li id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
@@ -75,8 +57,6 @@ foreach($dbh->query($sql) as $row){
 		</li>
 		<?php endforeach; ?>
 	</ul>
-	</div>
-	<div class="container" id="footer" style="background:grey">footer</div>
 	<script>
 	$(function(){
 		//focus

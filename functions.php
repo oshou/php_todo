@@ -1,5 +1,5 @@
 <?php
-//CommonFunctionFile
+//CommonFunction
 
 //Connection DB
 function connectDb(){

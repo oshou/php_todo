@@ -74,6 +74,17 @@ foreach($dbh->query($sql) as $row){
 				.append('<input type="button" value="更新" class="updataTask"')
 			$('#task_'+id+' input:eq(0)').focus();
 		});
+
+		$(document).on('click','.updataTask',function(){
+			//まず対象を指定するためにidが必要
+			var id=$(this).parent().data('id');
+			//更新後のテキストを取得。updataTaskボタンの前のテキストを取得
+			var title=$(this).prev().val();
+			//
+			$.post('_ajax_updata_task.php',{
+
+			})
+		})
 		/*
 		$(document).on('click','.editTask',function(){
 			var id=$(this).parent().data('id');

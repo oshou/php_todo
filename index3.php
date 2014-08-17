@@ -22,52 +22,36 @@ foreach($dbh->query($sql) as $row){
 <head>
 	<title>Todo_App</title>
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<style>
-	.deleteTask,.dragTask,.editTask{
-		cursor:pointer;
-		color:blue;
-	}
-	.done{
-		text-decoration: line-through;
-		color:gray;
-	}
-	</style>
 </head>
 <body>
-	
-	<p>
+	<div class="container" id="header" style="background:blue">Todo_App</div>
 	<div class="container">
-		<label class="control-label" for="inputSuccess1">Add NewTask</label>
-		<input type="text" id="title">
-		<input type="button" class="btn btn-primary" id="addTask" value="追加">
+		<div class="row">
+			<label class="control-label" for="inputSuccess1">Add NewTask</label>
+			<input type="text" id="title">
+			<input type="button" class="btn btn-primary btn-lg" id="addTask" value="追加">
+		</div>
+		<div class="row">
+			<table class="table table-condensed table-striped" id="tasks">
+				<?php foreach ($tasks as $task) : ?>
+				<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
+					<td><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
+					<td class="<?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
+					<td <?php if ($task['type']=="notyet"){ echo 'class="editTask"'; } ?>>[編集]</td>
+					<td class="deleteTask">[削除]</td>
+					<td class="dragTask">[並替]</td>
+				</tr>
+				<?php endforeach; ?>
+			</table>
+		</div>
 	</div>
-</p></p>
-	<div class="container">
-		<table class="table table-bordered" id="tasks">
-			<tr>
-				<td class="span1">□</td>
-				<td class="span8">Task</td>
-				<td class="span1">Edit</td>
-				<td class="span1">Delete</td>
-				<td class="span1">Drag</td>
-			</tr>
-			<?php foreach ($tasks as $task) : ?>
-			<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
-				<td><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
-				<td class="<?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
-				<td <?php if ($task['type']=="notyet"){ echo 'class="editTask"'; } ?>><input type="button" class="btn btn-success btn-xs" value="Edit"></td>
-				<td class="deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
-				<td class="dragTask">[並替]</td>
-			</tr>
-			<?php endforeach; ?>
-		</table>
-	</div>
-	<div class="container" id="footer" style="background:grey">footer</div>
+	<div class="container" id="footer">footer</div>
 	<script>
 	$(function(){
 		//focus
@@ -85,17 +69,17 @@ foreach($dbh->query($sql) as $row){
 				title:title
 			},function(rs){
 				var e=$(
-					'<tr id="task_'+rs+'" data-id="'+rs+'">'+
-					'<td><input type="checkbox" class="checkTask"></td>'+
-					'<td></td>'+
-					'<td class="editTask"><input type="button" class="btn btn-success btn-xs" value="Edit"></td>'+
-					'<td class="deleteTask"><input type="button" class="btn btn-danger" value="Delete"></td>'+
-					'<td class="dragTask">[並替]</td>'+
-					'</tr>'
+					'<li id="task_'+rs+'" data-id="'+rs+'">'+
+					'<input type="checkbox" class="checkTask">'+
+					'<span></span>'+
+					'<span class="editTask">[編集]</span>'+
+					'<span class="deleteTask">[削除]</span>'+
+					'<span class="dragTask">[並替]</span>'+
+					'</li>'
 				);
 				$('#tasks')
 					.append(e)
-					.find('tr:last td:eq(1)')
+					.find('li:last span:eq(0)')
 					.text(title);
 				$('#title')
 					.val('')
@@ -120,11 +104,10 @@ foreach($dbh->query($sql) as $row){
 			var id=$(this).parent().data('id');
 			var title=$(this).prev().text();
 			$('#task_'+id)
-				.find('td:eq(1)')
 				.empty()
 				.append($('<input type="text">').attr('value',title))
 				.append('<input type="button" value="更新" class="updateTask">')
-			$('#task_'+id+' input:eq(1)').focus();
+			$('#task_'+id+' input:eq(0)').focus();
 		});
 
 		$(document).on('click','.updateTask',function(){
@@ -142,20 +125,19 @@ foreach($dbh->query($sql) as $row){
 			},function(rs){
 				//編集完了後の表示項目を作成する。
 				//編集後のテキストは直後のメソッドで追加するので、span要素だけ作成しておく。
-
 				var e=$(
-					'<td><input type="checkbox" class="checkTask"></td>'+
-					'<td></td> '+
-					'<td class="editTask"><input type="button" class="btn btn-success btn-xs" value="Edit"></td>'+
-					'<td class="deleteTask"><input type="button" class="btn btn-danger" value="Delete"></td>'+
-					'<td class="dragTask">[並替]</span>'
+					'<input type="checkbox" class="checkTask">'+
+					'<span></span> '+
+					'<span class="editTask">[編集]</span>'+
+					'<span class="deleteTask">[削除]</span>'+
+					'<span class="dragTask">[並替]</span>'
 				);
 				//タスクを一度空にして、作成した表示内容を追加。
 				//その後、テキスト要素欄にあたるspan要素に新しいテキストを追加する。
 				$('#task_'+id)
 					.empty()
 					.append(e)
-					.find('td:eq(1)')
+					.find('span:eq(0)')
 					.text(title);
 			});
 		});

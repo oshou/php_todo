@@ -123,7 +123,7 @@ foreach($dbh->query($sql) as $row){
 				.find('td:eq(1)')
 				.empty()
 				.append($('<input type="text">').attr('value',title))
-				.append('<input type="button" value="更新" class="updateTask">')
+				.change('<input type="button" value="更新" class="updateTask">')
 			$('#task_'+id+' input:eq(1)').focus();
 		});
 
@@ -161,7 +161,7 @@ foreach($dbh->query($sql) as $row){
 		});
 
 		//タスクの完了済チェック
-		$(document).on('click','.checkTask',function(){
+		$(document).on('change','.checkTask',function(){
 			var id=$(this).parent().data('id');
 			var title=$(this).next();
 			$.post('_ajax_check_task.php',{

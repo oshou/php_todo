@@ -71,9 +71,9 @@ foreach($dbh->query($sql) as $row){
 					'<tr id="task_'+rs+'" data-id="'+rs+'">'+
 					'<td class="col-sm-1"><input type="checkbox" class="checkTask"></td>'+
 					'<td class="col-sm-8"></td>'+
-				  	'<td class="col-sm-1" class="editTask">[編集]</td>'+
-					'<td class="col-sm-1" class="deleteTask">[削除]</td>'+
-					'<td class="col-sm-1" class="dragTask">[並替]</td>'+
+				  	'<td class="col-sm-1 editTask"><input type="button" class="btn btn-success btn-xs" value="Edit"></td>'+
+					'<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>'+
+					'<td class="col-sm-1 dragTask">[並替]</td>'+
 					'</tr>'
 				);
 				$('#tasks')

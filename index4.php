@@ -17,6 +17,7 @@ foreach($dbh->query($sql) as $row){
 	array_push($tasks,$row);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -109,7 +110,8 @@ foreach($dbh->query($sql) as $row){
 				});
 			}
 		});
-
+		*/
+		/*
 		//タスク編集
 		//$(document).on('イベント','対象','処理内容')
 		$(document).on('click','.editTask',function(){

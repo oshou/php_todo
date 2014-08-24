@@ -8,13 +8,14 @@ create table tasks(
 	seq int not null,
 	type enum('notyet','done','deleted') default 'notyet',
 	title text,
+	plan Date,
 	created datetime,
 	modified datetime,
 	KEY type(type),
 	KEY seq(seq)
 );
 
-insert into tasks(seq,type,title,created,modified) values
-	(1,'notyet','テスト1',now(),now()),
-	(2,'notyet','テスト2',now(),now()),
-	(3,'done','テスト3',now(),now());	
+insert into tasks(seq,type,title,plan,created,modified) values
+	(1,'notyet','テスト1',now(),now(),now()),
+	(2,'notyet','テスト2',now(),now(),now()),
+	(3,'done','テスト3',now(),now(),now());	

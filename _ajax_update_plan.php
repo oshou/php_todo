@@ -8,8 +8,10 @@ require_once('functions.php');
 $dbh=connectDb();
 
 //Create SQLStatement
-$sql="update tasks set title=:title,modified=now() where id=:id";
+$sql="update tasks set plan=:plan,modified=now() where id=:id";
 $stmt=$dbh->prepare($sql);
 $stmt->execute(array(
 	":id"=>(int)$_POST['id'],
-	":title"=>$_POST['title']));
+	":plan"=>$_POST['plan']
+	)
+);

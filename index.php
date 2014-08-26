@@ -30,6 +30,7 @@ foreach($dbh->query($sql) as $row){
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/footerFixed.js"></script>
 </head>
 <body>			
 	<!--Header Start-->
@@ -83,7 +84,7 @@ foreach($dbh->query($sql) as $row){
 		//focus
 		$('#title').focus();
 
-		//addTask
+		//Add Task
 		$(".addTask").click(function(){
 			var title=$('#title').val();
 			var plan=$('#plan').val();
@@ -113,7 +114,7 @@ foreach($dbh->query($sql) as $row){
 			});
 		});
 
-		//DeleteTask
+		//Delete Task
 		$(document).on('click','.deleteTask',function(){
 			if (confirm('本当に削除しますか？')){	
 				var id=$(this).parent().data('id');
@@ -124,7 +125,7 @@ foreach($dbh->query($sql) as $row){
 				});
 			}
 		});
-		//タスク並び替え
+		//Sort Task
 		/*
 		$("#tasks").sortable({
 			axis:'y',
@@ -138,90 +139,48 @@ foreach($dbh->query($sql) as $row){
 		});
 		*/
 
-		//タスク編集
+		//Edit taskTitle
 		$('.editTitle').click(function(){
 			if(!$(this).hasClass('on')){				
 				$(this).addClass('on');
 				var id=$(this).parent().data('id');
 				var title=$(this).text();
 				$(this).html('<input type="text" id="updateTask" value="'+title+'" />');
-				$('F').focus().blur(function(){
-					var inputVal=$(this).val();
-					if(inputVal===''){
-						inputVal = this.defaultValue;
+				$('.editTitle > input').focus().blur(function(){
+					var inputTitle=$(this).val();
+					if(inputTitle===''){
+						inputTitle = this.defaultValue;
 					};
-					$(this).parent().removeClass('on').text(inputVal);
-										/*
-					$.post('_ajax_update_task.php',{
-						title:inputVal
+					$(this).parent().removeClass('on').text(inputTitle);
+					$.post('_ajax_update_title.php',{
+						id:id,
+						title:inputTitle
 					},function(){
-					})
-
-
-					if(inputVal===''){
-						inputVal=this.defaultValue;
-						console.log("a",inputVal);
-					} else{
-						$.post('_ajax_update_task.php',{
-							title:inputVal
-						},function(){
-							console.log("b",inputVal);
-							$(this).parent().removeClass('on').text(inputVal);							
-						});
-
-					}
-					*/
+					});
 				});
 			};
 		});
-		/*
-		//$(document).on('イベント','対象','処理内容')
-		/*
-		$(document).on('click','.editTask',function(){
-			var id=$(this).parent().data('id');
-			var title=$(this).prev().prev().text();
-			console.log(title);
-			$('#task_'+id)
-				.find('td:eq(1)')
-				.empty()
-				.append($('<input type="text" id="updateTask">'))
-			$('#task_'+id+' input:eq(1)').focus();
-		});
-*/
-		
-		$(".updateTask").change(function(){
-			//まず対象を指定するためにidが必要
-			var id=$(this).parent().data('id');
-			//更新後のテキストを取得。updateTaskボタンの前のテキストを取得
-			var title=$(this).prev().val();
-			//HTTP通信でページを読み込むメソッド,API
-			//jquery.post(url,data,callback,type)
-			//jquery.post('DB更新処理ファイルのURL','idとtitle','通信成功時のコールバック関数','typeは指定なしなので省略')
-			//jquery.postは$.postで省略可能。
-			$.post('_ajax_update_task.php',{
-				id:id,
-				title:title,
-				plan:plan
-			},function(rs){
-				//編集完了後の表示項目を作成する。
-				//編集後のテキストは直後のメソッドで追加するので、td要素だけ作成しておく。
-				var e=$(
-					'<td class="col-sm-1"><input type="checkbox" class="checkTask"></td>'+
-					'<td class="col-sm-6"></td>'+
-					'<td class="col-sm-2"></td>'+
-					'<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>'+
-					'<td class="col-sm-1 dragTask">[並替]</td>'
-				);
-				//タスクを一度空にして、作成した表示内容を追加。
-				//その後、テキスト要素欄にあたるtd要素に新しいテキストを追加する。
-				$('#task_'+id)
-					.empty()
-					.append(e)
-					.find('td:eq(1)')
-					.text(title)
-					.next()
-					.text(plan);
-			});
+
+		//Edit taskPlan
+		$('.editPlan').click(function(){
+			if(!$(this).hasClass('on')){				
+				$(this).addClass('on');
+				var id=$(this).parent().data('id');
+				var plan=$(this).text();
+				$(this).html('<input type="date" id="updateTask" value="'+plan+'" />');
+				$('.editPlan > input').focus().blur(function(){
+					var inputPlan=$(this).val();
+					if(inputPlan===''){
+						inputPlan = this.defaultValue;
+					};
+					$(this).parent().removeClass('on').text(inputPlan);
+					$.post('_ajax_update_plan.php',{
+						id:id,
+						plan:inputPlan
+					},function(){
+					});
+				});
+			};
 		});
 
 		//タスクの完了済チェック

@@ -10,7 +10,15 @@ $dbh=connectDb();
 //Create TaskArray
 $tasks=array();
 
-//Create SQLStatement
+//Create SQLStatement(CheckSeqMax)
+$seq=0;
+$sql="select max(seq)+1 from tasks where type !='deleted'";
+$seq=$dbh->query($sql)->fetchColumn();
+if (is_null($seq)){
+	$seq=0;
+}
+
+//Create SQLStatement(ShowAllTasks)
 $sql="select * from tasks where type != 'deleted' order by plan";
 
 foreach($dbh->query($sql) as $row){
@@ -39,12 +47,24 @@ foreach($dbh->query($sql) as $row){
 	</div>
 	<!--Header End-->
 
-	<!--Contents End-->		
-	<div class="container">	
-		<div id="contents">
+	<!--Contents Start-->		
+	<div class="container">
+		<!--Side Start-->		
+		<div id="sidemenu" class="col-md-3">
+			<ul class="nav nav-pills nav-stacked navbar-inverse">
+				<li><a href="#">Link1</a></li>
+				<li><a href="#">Link2</a></li>
+				<li><a href="#">Link3</a></li>
+				<li><a href="#">Link4</a></li>
+			</ul>
+		</div>	
+		<!--Side End-->		
+
+		<!--Main Start-->		
+		<div id="contents" class="col-md-9">
 			<br />
 			<label class="control-label" for="inputSuccess1">Add NewTask</label>
-			<input type="text" id="title">
+			<input type="text" id="title" />
 			<input type="date" id="plan" />
 			<input type="button" class="btn btn-primary btn-xs addTask" value="追加">
 			<br />
@@ -70,14 +90,15 @@ foreach($dbh->query($sql) as $row){
 				</tbody>
 			</table>
 		</div>
+		<!--Main End-->		
 	</div>
 	<!--Contents End-->		
 
-	<!--footer Start-->		
+	<!--Footer Start-->		
 	<div class="container">
 		<div id="footer" class="bg-primary">footer</div>
 	</div>
-	<!--Contents End-->		
+	<!--Footer End-->		
 
 	<script>
 	$(function(){
@@ -108,18 +129,16 @@ foreach($dbh->query($sql) as $row){
 					.text(title)
 					.next()
 					.text(plan);
-
-				console.log("test");
+				console.log('dataidは',$('#tasks').find('tr:last').data('id'))
 				$('#title')
-					.text('aaaaa')
+					.text('')
 					.focus();
-				console.log($('#title').text());
 			});
 		});
 
 		//Delete Task
 		$(document).on('click','.deleteTask',function(){
-			if (confirm('本当に削除しますか？')){	
+			if (confirm('本当に削除しますか？')){
 				var id=$(this).parent().data('id');
 				$.post('_ajax_delete_task.php',{
 					id:id
@@ -150,7 +169,7 @@ foreach($dbh->query($sql) as $row){
 				var id=$(this).parent().data('id');
 				var title=$(this).text();
 				$(this).html('<input type="text" id="updateTask" value="'+title+'" />');
-				$('.title > input').focus().blur(function(){
+				$('.title > input').focus().on("change",function(){
 					var inputTitle=$(this).val();
 					if(inputTitle===''){
 						inputTitle = this.defaultValue;
@@ -172,7 +191,7 @@ foreach($dbh->query($sql) as $row){
 				var id=$(this).parent().data('id');
 				var plan=$(this).text();
 				$(this).html('<input type="date" id="updateTask" value="'+plan+'" />');
-				$('.plan > input').focus().blur(function(){
+				$('.plan > input').focus().on("change",function(){
 					var inputPlan=$(this).val();
 					if(inputPlan===''){
 						inputPlan = this.defaultValue;

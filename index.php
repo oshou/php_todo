@@ -61,8 +61,8 @@ foreach($dbh->query($sql) as $row){
 				<?php foreach ($tasks as $task) : ?>
 					<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
 						<td class="col-sm-1"><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
-						<td class="col-sm-6 editTitle <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
-						<td class="col-sm-3 editPlan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
+						<td class="col-sm-6 title <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
+						<td class="col-sm-3 plan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
 						<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
 						<td class="col-sm-1 dragTask">[並替]</td>
 					</tr>
@@ -81,7 +81,7 @@ foreach($dbh->query($sql) as $row){
 
 	<script>
 	$(function(){
-		//focus
+		//Focus AddTaskInput
 		$('#title').focus();
 
 		//Add Task
@@ -96,7 +96,7 @@ foreach($dbh->query($sql) as $row){
 				var e=$(
 					'<tr id="task_'+rs+'" data-id="'+rs+'">'+
 					'<td class="col-sm-1"><input type="checkbox" class="checkTask"></td>'+
-					'<td class="col-sm-6 editTitle"></td>'+
+					'<td class="col-sm-6 title"></td>'+
 					'<td class="col-sm-2"></td>'+
 					'<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>'+
 					'<td class="col-sm-1 dragTask">[並替]</td>'+
@@ -108,9 +108,12 @@ foreach($dbh->query($sql) as $row){
 					.text(title)
 					.next()
 					.text(plan);
+
+				console.log("test");
 				$('#title')
-					.val('')
+					.text('aaaaa')
 					.focus();
+				console.log($('#title').text());
 			});
 		});
 
@@ -125,28 +128,29 @@ foreach($dbh->query($sql) as $row){
 				});
 			}
 		});
-		//Sort Task
-		/*
-		$("#tasks").sortable({
-			axis:'y',
-			opacity:0.2,
-			handle:'.dragTask',
-			update:function(){
-				$.post('_ajax_sort_task.php',{
-					task:$(this).sortable('serialize')
-				});
-			}
+
+		//Check Task
+		$(document).on('click','.checkTask',function(){
+			var id=$(this).parent().data('id');
+			$.post('_ajax_check_task.php',{
+				id:id
+			},function(rs){
+				if($(this).hasClass('done')){
+					$(this).removeClass('done').addClass('title').addClass('plan');
+				} else{
+					$(this).addClass('done').next().removeClass('title').removeClass('plan');;
+				}
+			});
 		});
-		*/
 
 		//Edit taskTitle
-		$('.editTitle').click(function(){
+		$('.title').click(function(){
 			if(!$(this).hasClass('on')){				
 				$(this).addClass('on');
 				var id=$(this).parent().data('id');
 				var title=$(this).text();
 				$(this).html('<input type="text" id="updateTask" value="'+title+'" />');
-				$('.editTitle > input').focus().blur(function(){
+				$('.title > input').focus().blur(function(){
 					var inputTitle=$(this).val();
 					if(inputTitle===''){
 						inputTitle = this.defaultValue;
@@ -162,13 +166,13 @@ foreach($dbh->query($sql) as $row){
 		});
 
 		//Edit taskPlan
-		$('.editPlan').click(function(){
+		$('.plan').click(function(){
 			if(!$(this).hasClass('on')){				
 				$(this).addClass('on');
 				var id=$(this).parent().data('id');
 				var plan=$(this).text();
 				$(this).html('<input type="date" id="updateTask" value="'+plan+'" />');
-				$('.editPlan > input').focus().blur(function(){
+				$('.plan > input').focus().blur(function(){
 					var inputPlan=$(this).val();
 					if(inputPlan===''){
 						inputPlan = this.defaultValue;
@@ -183,23 +187,19 @@ foreach($dbh->query($sql) as $row){
 			};
 		});
 
-		//タスクの完了済チェック
+		//Sort Task
 		/*
-		$(document).on('click','.checkTask',function(){
-			var id=$(this).parent().data('id');
-			var title=$(this).next();
-			$.post('_ajax_check_task.php',{
-				id:id
-			},function(rs){
-				if(title.hasClass('done')){
-					title.removeClass('done').addClass('editTask');
-				} else{
-					title.addClass('done').next().removeClass('editTask');
-				}
-			});
+		$("#tasks").sortable({
+			axis:'y',
+			opacity:0.2,
+			handle:'.dragTask',
+			update:function(){
+				$.post('_ajax_sort_task.php',{
+					task:$(this).sortable('serialize')
+				});
+			}
 		});
 		*/
-		//タスクの削除
 	});
 	</script>
 </body>

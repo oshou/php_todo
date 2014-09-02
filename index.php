@@ -33,6 +33,7 @@ foreach($dbh->query($sql) as $row){
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<!--<script src="js/jquery.tbodyscroll.js"></script>-->
 </head>
 <body>	
 	<!--Header Start-->
@@ -64,22 +65,22 @@ foreach($dbh->query($sql) as $row){
 					<input type="button" class="btn btn-primary btn-xs addTask" value="追加">
 					<br />
 					<br />
-					<table class="table table-condensed table-striped" id="tasks">
+					<table class="table table-condensed table-striped tbodyscroll" id="tasks">
 						<thead>
+							<th>Sort</th>
 							<th>Check</th>
 							<th>Title</th>
 							<th>Date</th>
 							<th>Delete</th>
-							<th>Drag</th>
 						</thead>
-						<tbody style="width:100%;height:100%;overflow-y:scroll">
+						<tbody>
 						<?php foreach ($tasks as $task) : ?>
 							<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
+								<td class="col-sm-1 dragTask">[並替]</td>
 								<td class="col-sm-1"><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
 								<td class="col-sm-6 title <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
 								<td class="col-sm-3 plan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
 								<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
-								<td class="col-sm-1 dragTask">[並替]</td>
 							</tr>
 						<?php endforeach; ?>
 						</tbody>
@@ -107,20 +108,19 @@ foreach($dbh->query($sql) as $row){
 			},function(rs){
 				var e=$(
 					'<tr id="task_'+rs+'" data-id="'+rs+'">'+
+					'<td class="col-sm-1 dragTask">[並替]</td>'+
 					'<td class="col-sm-1"><input type="checkbox" class="checkTask"></td>'+
 					'<td class="col-sm-6 title"></td>'+
 					'<td class="col-sm-2"></td>'+
 					'<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>'+
-					'<td class="col-sm-1 dragTask">[並替]</td>'+
 					'</tr>'
 				);
 				$('#tasks')
 					.append(e)
-					.find('tr:last td:eq(1)')
+					.find('tr:last td:eq(2)')
 					.text(title)
 					.next()
 					.text(plan);
-				console.log('dataidは',$('#tasks').find('tr:last').data('id'))
 				$('#title')
 					.text('')
 					.focus();
@@ -198,8 +198,7 @@ foreach($dbh->query($sql) as $row){
 		});
 
 		//Sort Task
-		/*
-		$("#tasks").sortable({
+		$("#tasks tbody").sortable({
 			axis:'y',
 			opacity:0.2,
 			handle:'.dragTask',
@@ -208,6 +207,14 @@ foreach($dbh->query($sql) as $row){
 					task:$(this).sortable('serialize')
 				});
 			}
+		});
+
+		/*
+		$(document).ready(function(){
+			$('.tbodyscroll').tbodyscroll({
+				thead_height:'30px',
+				tbody_height:'70px',
+			});
 		});
 		*/
 	});

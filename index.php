@@ -10,14 +10,6 @@ $dbh=connectDb();
 //Create TaskArray
 $tasks=array();
 
-//Create SQLStatement(CheckSeqMax)
-$seq=0;
-$sql="select max(seq)+1 from tasks where type !='deleted'";
-$seq=$dbh->query($sql)->fetchColumn();
-if (is_null($seq)){
-	$seq=0;
-}
-
 //Create SQLStatement(ShowAllTasks)
 $sql="select * from tasks where type != 'deleted' order by plan";
 
@@ -33,72 +25,71 @@ foreach($dbh->query($sql) as $row){
 	<meta charset="utf-8">
    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
 	<link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
 	<link rel="stylesheet" href="css/style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/footerFixed.js"></script>
 </head>
-<body>			
+<body>	
 	<!--Header Start-->
-	<div class="container">
-		<div id="header" class="bg-primary">Header</div>
-	</div>
-	<!--Header End-->
+	<!-- <div id="header" class="bg-primary">Header</div>-->
+	<!--Header End-->	
 
-	<!--Contents Start-->		
-	<div class="container">
-		<!--Side Start-->		
-		<div id="sidemenu" class="col-md-3">
-			<ul class="nav nav-pills nav-stacked navbar-inverse">
-				<li><a href="#">Link1</a></li>
-				<li><a href="#">Link2</a></li>
-				<li><a href="#">Link3</a></li>
-				<li><a href="#">Link4</a></li>
+	<!--Contents Start-->	
+	<div id="wrapper">	
+		<!--Sidebar Start-->	
+		<div id="sidebar-wrapper">
+			<ul class="sidebar-nav">
+				<li class="sidebar-brand"><a href="#">Home</a></li>
+				<li><a href="#">Today</a></li>
+				<li><a href="#">ThisWeek</a></li>
+				<li><a href="#">All</a></li>
+				<li><a href="#">Done</a></li>
 			</ul>
 		</div>	
-		<!--Side End-->		
+		<!--Sidebar End-->		
 
 		<!--Main Start-->		
-		<div id="contents" class="col-md-9">
-			<br />
-			<label class="control-label" for="inputSuccess1">Add NewTask</label>
-			<input type="text" id="title" />
-			<input type="date" id="plan" />
-			<input type="button" class="btn btn-primary btn-xs addTask" value="追加">
-			<br />
-			<br />
-			<table class="table table-condensed table-striped" id="tasks">
-				<thead>
-					<th>Check</th>
-					<th>Title</th>
-					<th>Date</th>
-					<th>Delete</th>
-					<th>Drag</th>
-				</thead>
-				<tbody>
-				<?php foreach ($tasks as $task) : ?>
-					<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
-						<td class="col-sm-1"><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
-						<td class="col-sm-6 title <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
-						<td class="col-sm-3 plan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
-						<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
-						<td class="col-sm-1 dragTask">[並替]</td>
-					</tr>
-				<?php endforeach; ?>
-				</tbody>
-			</table>
+		<div id="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<br />
+					<label class="control-label" for="inputSuccess1">Add NewTask</label>
+					<input type="text" id="title" />
+					<input type="date" id="plan" />
+					<input type="button" class="btn btn-primary btn-xs addTask" value="追加">
+					<br />
+					<br />
+					<table class="table table-condensed table-striped" id="tasks">
+						<thead>
+							<th>Check</th>
+							<th>Title</th>
+							<th>Date</th>
+							<th>Delete</th>
+							<th>Drag</th>
+						</thead>
+						<tbody style="width:100%;height:100%;overflow-y:scroll">
+						<?php foreach ($tasks as $task) : ?>
+							<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
+								<td class="col-sm-1"><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
+								<td class="col-sm-6 title <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
+								<td class="col-sm-3 plan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
+								<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
+								<td class="col-sm-1 dragTask">[並替]</td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 		<!--Main End-->		
-	</div>
+	</div>	
 	<!--Contents End-->		
-
-	<!--Footer Start-->		
-	<div class="container">
-		<div id="footer" class="bg-primary">footer</div>
-	</div>
-	<!--Footer End-->		
 
 	<script>
 	$(function(){

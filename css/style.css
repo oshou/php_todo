@@ -4,18 +4,13 @@ input[type=date]{
 }
 
 input[type=text]{
-	width:250px;
+	width:220px;
 	height:22px;
 }
 
 .done{
 	text-decoration: line-through;
 }
-/*
-tbody{
-	overflow-y:scroll;
-}
-*/
 
 #wrapper {
     padding-left: 0;

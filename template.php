@@ -3,10 +3,8 @@
 <head>
 	<title>Todo_App</title>
 	<meta charset="utf-8">
-   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
 
 	<link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
 	<link rel="stylesheet" href="css/style.css">
@@ -15,14 +13,14 @@
 	<script src="js/bootstrap.min.js"></script>
 	<!--<script src="js/jquery.tbodyscroll.js"></script>-->
 </head>
-<body>	
+<body>
 	<!--Header Start-->
 	<!-- <div id="header" class="bg-primary">Header</div>-->
-	<!--Header End-->	
+	<!--Header End-->
 
-	<!--Contents Start-->	
-	<div id="wrapper">	
-		<!--Sidebar Start-->	
+	<!--Contents Start-->
+	<div id="wrapper">
+		<!--Sidebar Start-->
 		<div id="sidebar-wrapper">
 			<ul class="sidebar-nav">
 				<li class="sidebar-brand"><a href="index.php?p=all">Home</a></li>
@@ -31,10 +29,10 @@
 				<li><a href="index.php?p=all">All</a></li>
 				<li><a href="index.php?p=done">Done</a></li>
 			</ul>
-		</div>	
-		<!--Sidebar End-->		
+		</div>
+		<!--Sidebar End-->
 
-		<!--Main Start-->		
+		<!--Main Start-->
 		<div id="page-content-wrapper">
 			<div class="container-fluid">
 				<div class="row">
@@ -47,20 +45,22 @@
 					<br />
 					<table class="table table-condensed table-striped tbodyscroll" id="tasks">
 						<thead>
-							<th>Sort</th>
-							<th>Check</th>
-							<th>Title</th>
-							<th>Date</th>
-							<th>Delete</th>
+							<tr>
+								<th>Sort</th>
+								<th>Check</th>
+								<th>Title</th>
+								<th>Date</th>
+								<th>Delete</th>
+							</tr>
 						</thead>
 						<tbody>
 						<?php foreach ($tasks as $task) : ?>
 							<tr id="task_<?php echo h($task['id']); ?>" data-id="<?php echo h($task['id']); ?>">
-								<td class="col-sm-1 dragTask">[並替]</td>
-								<td class="col-sm-1"><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
-								<td class="col-sm-6 title <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
-								<td class="col-sm-3 plan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
-								<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
+								<td class="span1 dragTask">[並替]</td>
+								<td class="span1"><input type="checkbox" class="checkTask" <?php if($task['type']=="done"){ echo "checked";} ?>></td>
+								<td class="span6 title <?php echo h($task['type']); ?>"><?php echo h($task['title']); ?></td>
+								<td class="span3 plan <?php echo h($task['type']); ?>"><?php echo h($task['plan']); ?></td>
+								<td class="span1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>
 							</tr>
 						<?php endforeach; ?>
 						</tbody>
@@ -68,9 +68,9 @@
 				</div>
 			</div>
 		</div>
-		<!--Main End-->		
-	</div>	
-	<!--Contents End-->		
+		<!--Main End-->
+	</div>
+	<!--Contents End-->
 
 	<script>
 	$(function(){
@@ -86,13 +86,14 @@
 				title:title,
 				plan:plan
 			},function(rs){
+				console.log(rs);
 				var e=$(
 					'<tr id="task_'+rs+'" data-id="'+rs+'">'+
-					'<td class="col-sm-1 dragTask">[並替]</td>'+
-					'<td class="col-sm-1"><input type="checkbox" class="checkTask"></td>'+
-					'<td class="col-sm-6 title"></td>'+
-					'<td class="col-sm-2"></td>'+
-					'<td class="col-sm-1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>'+
+					'<td class="span1 dragTask">[並替]</td>'+
+					'<td class="span1"><input type="checkbox" class="checkTask"></td>'+
+					'<td class="span6 title"></td>'+
+					'<td class="span2"></td>'+
+					'<td class="span1 deleteTask"><input type="button" class="btn btn-danger btn-xs" value="Delete"></td>'+
 					'</tr>'
 				);
 				$('#tasks')
@@ -122,7 +123,6 @@
 		//Check Task
 		$(document).on('click','.checkTask',function(){
 			var id=$(this).parent().parent().data('id');
-			console.log(id);
 			$.post('_ajax_check_task.php',{
 				id:id
 			},function(rs){
@@ -135,13 +135,13 @@
 		});
 
 		//Edit taskTitle
-		$('.title').click(function(){
-			if(!$(this).hasClass('on')){				
+		$('.title').on('click',function(){
+			if(!$(this).hasClass('on')){
 				$(this).addClass('on');
 				var id=$(this).parent().data('id');
 				var title=$(this).text();
 				$(this).html('<input type="text" id="updateTask" value="'+title+'" />');
-				$('.title > input').focus().on("change",function(){
+				$('.title > input').focus().on("change blur",function(){
 					var inputTitle=$(this).val();
 					if(inputTitle===''){
 						inputTitle = this.defaultValue;
@@ -158,12 +158,12 @@
 
 		//Edit taskPlan
 		$('.plan').click(function(){
-			if(!$(this).hasClass('on')){				
+			if(!$(this).hasClass('on')){
 				$(this).addClass('on');
 				var id=$(this).parent().data('id');
 				var plan=$(this).text();
 				$(this).html('<input type="date" id="updateTask" value="'+plan+'" />');
-				$('.plan > input').focus().on("change",function(){
+				$('.plan > input').focus().on("change blur",function(){
 					var inputPlan=$(this).val();
 					if(inputPlan===''){
 						inputPlan = this.defaultValue;
@@ -186,7 +186,7 @@
 			update:function(){
 				$.post('_ajax_sort_task.php',{
 					task: $(this).sortable('serialize')
-				});		
+				});
 			}
 		});
 

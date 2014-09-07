@@ -10,7 +10,6 @@ $dbh=connectDb();
 $tasks=array();
 
 //Create SQLStatement(ShowAllTasks)
-//var_dump(DATE(NOW()));
 $sql="SELECT * FROM tasks WHERE type != 'deleted' AND plan=CURDATE() ORDER BY seq,plan";
 
 foreach($dbh->query($sql) as $row){
